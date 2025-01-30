@@ -45,21 +45,24 @@ app.get('/deletefile/:filename',function(req,res){
         }
     })
 })
-
-// app.get('/deletefile/:filename', function (req, res) {
-//     const filePath = `./files/${req.params.filename}`;
-
-//     fs.unlink(filePath, function (err) {
-//         if (err) {
-//             if (err.code === "ENOENT") {
-//                 return res.status(404).send("File not found.");
-//             }
-//             return res.status(500).send("Error deleting file.");
-//         }
-//         res.redirect("/");
-//     });
-// });
-
+app.get('/back',function(req,res){
+    res.redirect("/");
+})
+app.get('/edit/:fileName',function(req,res){
+    res.render("edit",{filename:req.params.fileName});
+})
+app.post('/update',function(req,res){
+    const prev = req.body.prevName;
+    const newname = req.body.newName;
+    fs.rename(`./files/${prev}`,`./files/${newname}`,function(err){
+        if(err){
+            res.send("Error in renaming file!");
+        }
+        else{
+            res.redirect("/");
+        }
+    })
+})
 
 app.listen(PORT,function(){
     console.log(`Server is listen on ${PORT}:`);
